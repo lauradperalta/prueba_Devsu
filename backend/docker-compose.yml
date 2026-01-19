@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: banco-postgres
+    environment:
+      POSTGRES_DB: banco_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - banco-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cuenta-movimiento-api
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: banco_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres123
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - banco-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/clientes"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+networks:
+  banco-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

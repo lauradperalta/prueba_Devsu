@@ -1,0 +1,3 @@
+com\devsu\cuentamovimiento\dto\ClienteDTO.class
+com\devsu\cuentamovimiento\entity\Persona.class
+com\devsu\cuentamovimiento\exception\ResourceNotFoundException.class
