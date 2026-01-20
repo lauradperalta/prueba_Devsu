@@ -1,0 +1,84 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: var(--primary-dark);
+  font-size: 2rem;
+  margin-bottom: var(--spacing-xl);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.button-group {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.reporte-container {
+  margin-top: var(--spacing-xl);
+}
+
+.reporte-header {
+  background: var(--white);
+  padding: var(--spacing-lg);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.reporte-header h2 {
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary-dark);
+}
+
+.totales-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.total {
+  padding: var(--spacing-md);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-credito {
+  background-color: #d1fae5;
+  border-left: 4px solid var(--success-color);
+}
+
+.total-debito {
+  background-color: #fee2e2;
+  border-left: 4px solid var(--error-color);
+}
+
+.total-label {
+  font-weight: 600;
+  color: var(--secondary-dark);
+}
+
+.total-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.text-success {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.text-danger {
+  color: var(--error-color);
+  font-weight: 600;
+}
+

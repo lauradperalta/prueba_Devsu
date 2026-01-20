@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="page-header flex justify-between items-center">
+    <h1>Gestión de Movimientos</h1>
+    <button class="btn btn-primary" (click)="abrirModal()">
+      + Nuevo Movimiento
+    </button>
+  </div>
+
+  <app-alert [show]="!!error" [message]="error" type="error" (showChange)="error = ''"></app-alert>
+  <app-alert [show]="!!success" [message]="success" type="success" (showChange)="success = ''"></app-alert>
+
+  <app-search 
+    placeholder="Buscar por número de cuenta o tipo..."
+    (search)="buscar($event)">
+  </app-search>
+
+  <div *ngIf="loading" class="loading"><div class="spinner"></div></div>
+
+  <div *ngIf="!loading" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Cuenta</th>
+          <th>Tipo</th>
+          <th>Valor</th>
+          <th>Saldo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movimiento of movimientosFiltrados">
+          <td>{{ movimiento.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ movimiento.numeroCuenta }}</td>
+          <td>
+            <span [class]="movimiento.tipoMovimiento === 'Crédito' ? 'badge badge-success' : 'badge badge-danger'">
+              {{ movimiento.tipoMovimiento }}
+            </span>
+          </td>
+          <td [class]="movimiento.valor >= 0 ? 'text-success' : 'text-danger'">
+            \${{ movimiento.valor | number:'1.2-2' }}
+          </td>
+          <td>\${{ movimiento.saldo | number:'1.2-2' }}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="eliminarMovimiento(movimiento.id!)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="movimientosFiltrados.length === 0">
+          <td colspan="6" class="text-center">No se encontraron movimientos</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-modal 
+    [isOpen]="mostrarModal" 
+    title="Nuevo Movimiento"
+    (closeModal)="cerrarModal()">
+    <app-movimiento-form 
+      (movimientoGuardado)="onMovimientoGuardado()"
+      (cancelar)="cerrarModal()">
+    </app-movimiento-form>
+  </app-modal>
+</div>
+

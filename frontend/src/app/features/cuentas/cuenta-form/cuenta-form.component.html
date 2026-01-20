@@ -1,0 +1,82 @@
+<form [formGroup]="cuentaForm" (ngSubmit)="guardar()">
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="numeroCuenta">Número de Cuenta *</label>
+      <input 
+        id="numeroCuenta"
+        type="text" 
+        formControlName="numeroCuenta"
+        [class.input-error]="f['numeroCuenta'].invalid && f['numeroCuenta'].touched">
+      <div class="error-message" *ngIf="f['numeroCuenta'].invalid && f['numeroCuenta'].touched">
+        <span *ngIf="f['numeroCuenta'].errors?.['required']">El número de cuenta es obligatorio</span>
+        <span *ngIf="f['numeroCuenta'].errors?.['minlength']">Mínimo 6 caracteres</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoCuenta">Tipo de Cuenta *</label>
+      <select 
+        id="tipoCuenta"
+        formControlName="tipoCuenta"
+        [class.input-error]="f['tipoCuenta'].invalid && f['tipoCuenta'].touched">
+        <option value="">Seleccione...</option>
+        <option value="Ahorro">Ahorro</option>
+        <option value="Corriente">Corriente</option>
+      </select>
+      <div class="error-message" *ngIf="f['tipoCuenta'].invalid && f['tipoCuenta'].touched">
+        El tipo de cuenta es obligatorio
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="saldoInicial">Saldo Inicial *</label>
+      <input 
+        id="saldoInicial"
+        type="number" 
+        step="0.01"
+        formControlName="saldoInicial"
+        [class.input-error]="f['saldoInicial'].invalid && f['saldoInicial'].touched">
+      <div class="error-message" *ngIf="f['saldoInicial'].invalid && f['saldoInicial'].touched">
+        <span *ngIf="f['saldoInicial'].errors?.['required']">El saldo inicial es obligatorio</span>
+        <span *ngIf="f['saldoInicial'].errors?.['min']">El saldo debe ser mayor o igual a 0</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="clienteId">Cliente *</label>
+      <select 
+        id="clienteId"
+        formControlName="clienteId"
+        [class.input-error]="f['clienteId'].invalid && f['clienteId'].touched">
+        <option value="">Seleccione un cliente...</option>
+        <option *ngFor="let cliente of clientes" [value]="cliente.clienteId">
+          {{ cliente.nombre }} - {{ cliente.identificacion }}
+        </option>
+      </select>
+      <div class="error-message" *ngIf="f['clienteId'].invalid && f['clienteId'].touched">
+        Debe seleccionar un cliente
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox" formControlName="estado">
+      <span class="checkbox-label">Cuenta Activa</span>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn btn-secondary" (click)="onCancelar()" [disabled]="loading">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="loading || cuentaForm.invalid">
+      {{ loading ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </div>
+</form>
+

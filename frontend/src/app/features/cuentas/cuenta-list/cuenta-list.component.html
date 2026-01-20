@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="page-header flex justify-between items-center">
+    <h1>Gestión de Cuentas</h1>
+    <button class="btn btn-primary" (click)="abrirModal()">
+      + Nueva Cuenta
+    </button>
+  </div>
+
+  <app-alert [show]="!!error" [message]="error" type="error" (showChange)="error = ''"></app-alert>
+  <app-alert [show]="!!success" [message]="success" type="success" (showChange)="success = ''"></app-alert>
+
+  <app-search 
+    placeholder="Buscar por número, tipo o cliente..."
+    (search)="buscar($event)">
+  </app-search>
+
+  <div *ngIf="loading" class="loading"><div class="spinner"></div></div>
+
+  <div *ngIf="!loading" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Número Cuenta</th>
+          <th>Tipo</th>
+          <th>Saldo Inicial</th>
+          <th>Cliente</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cuenta of cuentasFiltradas">
+          <td>{{ cuenta.numeroCuenta }}</td>
+          <td>{{ cuenta.tipoCuenta }}</td>
+          <td>\${{ cuenta.saldoInicial | number:'1.2-2' }}</td>
+          <td>{{ cuenta.nombreCliente }}</td>
+          <td>
+            <span [class]="cuenta.estado ? 'badge badge-success' : 'badge badge-danger'">
+              {{ cuenta.estado ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <button class="btn btn-sm btn-secondary" (click)="abrirModal(cuenta)">Editar</button>
+              <button class="btn btn-sm btn-danger" (click)="eliminarCuenta(cuenta.id!)">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="cuentasFiltradas.length === 0">
+          <td colspan="6" class="text-center">No se encontraron cuentas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-modal 
+    [isOpen]="mostrarModal" 
+    [title]="cuentaSeleccionada ? 'Editar Cuenta' : 'Nueva Cuenta'"
+    (closeModal)="cerrarModal()">
+    <app-cuenta-form 
+      [cuenta]="cuentaSeleccionada"
+      (cuentaGuardada)="onCuentaGuardada()"
+      (cancelar)="cerrarModal()">
+    </app-cuenta-form>
+  </app-modal>
+</div>
+

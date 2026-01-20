@@ -1,0 +1,122 @@
+<form [formGroup]="clienteForm" (ngSubmit)="guardar()">
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="nombre">Nombre *</label>
+      <input 
+        id="nombre"
+        type="text" 
+        formControlName="nombre"
+        [class.input-error]="f['nombre'].invalid && f['nombre'].touched">
+      <div class="error-message" *ngIf="f['nombre'].invalid && f['nombre'].touched">
+        <span *ngIf="f['nombre'].errors?.['required']">El nombre es obligatorio</span>
+        <span *ngIf="f['nombre'].errors?.['minlength']">Mínimo 3 caracteres</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="genero">Género *</label>
+      <select 
+        id="genero"
+        formControlName="genero"
+        [class.input-error]="f['genero'].invalid && f['genero'].touched">
+        <option value="">Seleccione...</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+      </select>
+      <div class="error-message" *ngIf="f['genero'].invalid && f['genero'].touched">
+        El género es obligatorio
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="edad">Edad *</label>
+      <input 
+        id="edad"
+        type="number" 
+        formControlName="edad"
+        [class.input-error]="f['edad'].invalid && f['edad'].touched">
+      <div class="error-message" *ngIf="f['edad'].invalid && f['edad'].touched">
+        <span *ngIf="f['edad'].errors?.['required']">La edad es obligatoria</span>
+        <span *ngIf="f['edad'].errors?.['min']">Edad mínima 18 años</span>
+        <span *ngIf="f['edad'].errors?.['max']">Edad máxima 100 años</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="identificacion">Identificación *</label>
+      <input 
+        id="identificacion"
+        type="text" 
+        formControlName="identificacion"
+        [class.input-error]="f['identificacion'].invalid && f['identificacion'].touched">
+      <div class="error-message" *ngIf="f['identificacion'].invalid && f['identificacion'].touched">
+        <span *ngIf="f['identificacion'].errors?.['required']">La identificación es obligatoria</span>
+        <span *ngIf="f['identificacion'].errors?.['minlength']">Mínimo 10 caracteres</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="direccion">Dirección *</label>
+    <input 
+      id="direccion"
+      type="text" 
+      formControlName="direccion"
+      [class.input-error]="f['direccion'].invalid && f['direccion'].touched">
+    <div class="error-message" *ngIf="f['direccion'].invalid && f['direccion'].touched">
+      <span *ngIf="f['direccion'].errors?.['required']">La dirección es obligatoria</span>
+      <span *ngIf="f['direccion'].errors?.['minlength']">Mínimo 10 caracteres</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="telefono">Teléfono *</label>
+      <input 
+        id="telefono"
+        type="text" 
+        formControlName="telefono"
+        [class.input-error]="f['telefono'].invalid && f['telefono'].touched">
+      <div class="error-message" *ngIf="f['telefono'].invalid && f['telefono'].touched">
+        <span *ngIf="f['telefono'].errors?.['required']">El teléfono es obligatorio</span>
+        <span *ngIf="f['telefono'].errors?.['pattern']">Formato inválido (9-10 dígitos)</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="contrasena">Contraseña *</label>
+      <input 
+        id="contrasena"
+        type="password" 
+        formControlName="contrasena"
+        [class.input-error]="f['contrasena'].invalid && f['contrasena'].touched">
+      <div class="error-message" *ngIf="f['contrasena'].invalid && f['contrasena'].touched">
+        <span *ngIf="f['contrasena'].errors?.['required']">La contraseña es obligatoria</span>
+        <span *ngIf="f['contrasena'].errors?.['minlength']">Mínimo 4 caracteres</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox" formControlName="estado">
+      <span class="checkbox-label">Cliente Activo</span>
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn btn-secondary" (click)="onCancelar()" [disabled]="loading">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="loading || clienteForm.invalid">
+      {{ loading ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </div>
+</form>
+

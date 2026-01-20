@@ -1,0 +1,104 @@
+<div class="page-container">
+  <h1>Reportes de Movimientos</h1>
+
+  <app-alert [show]="!!error" [message]="error" type="error" (showChange)="error = ''"></app-alert>
+  <app-alert [show]="!!success" [message]="success" type="success" (showChange)="success = ''"></app-alert>
+
+  <div class="card">
+    <form [formGroup]="reporteForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaInicio">Fecha Inicio *</label>
+          <input 
+            id="fechaInicio"
+            type="date" 
+            formControlName="fechaInicio">
+        </div>
+
+        <div class="form-group">
+          <label for="fechaFin">Fecha Fin *</label>
+          <input 
+            id="fechaFin"
+            type="date" 
+            formControlName="fechaFin">
+        </div>
+
+        <div class="form-group">
+          <label for="clienteId">Cliente *</label>
+          <select id="clienteId" formControlName="clienteId">
+            <option value="">Seleccione...</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.clienteId">
+              {{ cliente.nombre }} - {{ cliente.identificacion }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="generarReporte()"
+          [disabled]="loading || reporteForm.invalid">
+          {{ loading ? 'Generando...' : 'Generar Reporte' }}
+        </button>
+
+        <button 
+          type="button" 
+          class="btn btn-danger"
+          (click)="descargarPDF()"
+          [disabled]="loading || reporteForm.invalid || reportes.length === 0">
+          Descargar PDF
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="loading" class="loading"><div class="spinner"></div></div>
+
+  <div *ngIf="reportes.length > 0 && !loading" class="reporte-container">
+    <div class="reporte-header">
+      <h2>Estado de Cuenta</h2>
+      <div class="totales-container">
+        <div class="total total-credito">
+          <span class="total-label">Total Créditos:</span>
+          <span class="total-value">\${{ calcularTotalCreditos() | number:'1.2-2' }}</span>
+        </div>
+        <div class="total total-debito">
+          <span class="total-label">Total Débitos:</span>
+          <span class="total-value">\${{ calcularTotalDebitos() | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Cuenta</th>
+            <th>Tipo</th>
+            <th>Saldo Inicial</th>
+            <th>Movimiento</th>
+            <th>Saldo Disponible</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reporte of reportes">
+            <td>{{ reporte.Fecha | date:'dd/MM/yyyy' }}</td>
+            <td>{{ reporte.Cliente }}</td>
+            <td>{{ reporte['Numero Cuenta'] }}</td>
+            <td>{{ reporte.Tipo }}</td>
+            <td>\${{ reporte['Saldo Inicial'] | number:'1.2-2' }}</td>
+            <td [class]="reporte.Movimiento >= 0 ? 'text-success' : 'text-danger'">
+              \${{ reporte.Movimiento | number:'1.2-2' }}
+            </td>
+            <td>\${{ reporte['Saldo Disponible'] | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

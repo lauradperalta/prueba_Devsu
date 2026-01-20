@@ -1,0 +1,88 @@
+<div class="page-container">
+  <div class="page-header flex justify-between items-center">
+    <h1>Gestión de Clientes</h1>
+    <button class="btn btn-primary" (click)="abrirModal()">
+      + Nuevo Cliente
+    </button>
+  </div>
+
+  <app-alert 
+    [show]="!!error" 
+    [message]="error" 
+    type="error"
+    (showChange)="error = ''">
+  </app-alert>
+
+  <app-alert 
+    [show]="!!success" 
+    [message]="success" 
+    type="success"
+    (showChange)="success = ''">
+  </app-alert>
+
+  <app-search 
+    placeholder="Buscar por nombre, identificación o teléfono..."
+    (search)="buscar($event)">
+  </app-search>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Género</th>
+          <th>Edad</th>
+          <th>Identificación</th>
+          <th>Teléfono</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientesFiltrados">
+          <td>{{ cliente.clienteId }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.genero }}</td>
+          <td>{{ cliente.edad }}</td>
+          <td>{{ cliente.identificacion }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td>
+            <span [class]="cliente.estado ? 'badge badge-success' : 'badge badge-danger'">
+              {{ cliente.estado ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <button class="btn btn-sm btn-secondary" (click)="abrirModal(cliente)">
+                Editar
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="eliminarCliente(cliente.clienteId!)">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="clientesFiltrados.length === 0">
+          <td colspan="8" class="text-center">No se encontraron clientes</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-modal 
+    [isOpen]="mostrarModal" 
+    [title]="clienteSeleccionado ? 'Editar Cliente' : 'Nuevo Cliente'"
+    (closeModal)="cerrarModal()">
+    <app-cliente-form 
+      [cliente]="clienteSeleccionado"
+      (clienteGuardado)="onClienteGuardado()"
+      (cancelar)="cerrarModal()">
+    </app-cliente-form>
+  </app-modal>
+</div>
+
